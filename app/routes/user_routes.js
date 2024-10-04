@@ -18,20 +18,7 @@ const BadCredentialsError = errors.BadCredentialsError;
 
 const User = require("../models/user");
 
-const File = require("../models/file");
-
 const multer = require("multer");
-
-const storage = multer.memoryStorage(); // Store files in memory
-const upload = multer({ storage });
-
-// const upload = multer({ storage });
-
-// const upload = multer({ storage: storage });
-
-// const storage = multer.memoryStorage();
-
-// const upload = multer({ storage });
 
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
@@ -60,6 +47,7 @@ router.post("/sign-up", async (req, res, next) => {
     );
 
     const user = {
+      fullName: req.body.credentials.fullName,
       email: req.body.credentials.email,
       username: req.body.credentials.username,
       hashedPassword: hash,

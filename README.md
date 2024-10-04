@@ -1,6 +1,6 @@
 # express-api
 
-This is the backend repo of the project. Front-end of this project is found at https://github.com/nugrezo/threadify-client
+This is the backend repo of the project. Front-end of this project is found at https://github.com/nugrezo/stockphony-client
 
 This backend server is created for starting projects with `express`. It Includes
 authentication and common middlewares. The middlewares are presented below.
@@ -8,7 +8,7 @@ authentication and common middlewares. The middlewares are presented below.
 - app.use(replaceToken)
 - app.use(auth)
 - app.use(requestLogger)
-- app.use(threadifyRoutes)
+- app.use(stockphonyRoutes)
 - app.use(userRoutes)
 - app.use(commentRoutes)
 - app.use(likesRoutes)
@@ -20,7 +20,7 @@ authentication and common middlewares. The middlewares are presented below.
 1. Rename the directory from express-api -> your-app-name.
 1. Empty [`README.md`](README.md) and fill with your own content.
 1. Move into the new project and `git init`.
-1. Replace all instances of `'threadfy'` with your app name.
+1. Replace all instances of `'stockphony'` with your app name.
 1. Install dependencies with `npm install`.
 1. Ensure that you have `nodemon` installed by running `npm install -g nodemon`.
 1. Ensure the API is functioning properly by running `npm run server`.
@@ -108,15 +108,15 @@ Add your own scripts to test your custom API.
 
 ### Application Routes
 
-| Verb   | URI Pattern           | #Action           |
-| ------ | --------------------- | ----------------- |
-| POST   | `/threads`            | `thread#crate`    |
-| GET    | `/threads`            | `thread#showall`  |
-| DELETE | `/threads/id/`        | `threads#delete`  |
-| PATCH  | `/threads/id/`        | `threads#update`  |
-| GET    | `/threads/id/`        | `threads#show  `  |
-| POST   | `/threads/id/comment` | `threads#comment` |
-| POST   | `/threads/id/like`    | `threads#like  `  |
+| Verb   | URI Pattern            | #Action            |
+| ------ | ---------------------- | ------------------ |
+| POST   | `/example`             | `example#crate`    |
+| GET    | `/examples`            | `examples#showall` |
+| DELETE | `/examples/id/`        | `examples#delete`  |
+| PATCH  | `/examples/id/`        | `examples#update`  |
+| GET    | `/examples/id/`        | `examples#show  `  |
+| POST   | `/examples/id/comment` | `examples#comment` |
+| POST   | `/examples/id/like`    | `examples#like  `  |
 
 #### POST /sign-up
 
@@ -231,7 +231,7 @@ Response:
 HTTP/1.1 204 No Content
 ```
 
-#### POST /threads
+#### POST /examples
 
 Request:
 
@@ -242,19 +242,19 @@ curl "${API}${URL_PATH}" \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer ${TOKEN}" \
   --data '{
-    "thread": {
+    "example": {
       "text": "'"${TEXT}"'"
     }
   }'
 ```
 
 ```sh
-TOKEN="33ad6372f795694b333ec5f329ebeaaa" TEXT="sample text" curl-scripts/threads/create.sh
+TOKEN="33ad6372f795694b333ec5f329ebeaaa" TEXT="sample text" curl-scripts/example/create.sh
 ```
 
 Example request:
 
-TOKEN="a58e50a154929d4ab55deca015366b0d" TEXT="Today the weather is amazing" curl-scripts/threads/create.sh
+TOKEN="a58e50a154929d4ab55deca015366b0d" TEXT="Today the weather is amazing" curl-scripts/examples/create.sh
 
 Response:
 
@@ -262,7 +262,7 @@ Response:
 HTTP/1.1 201 Created
 Content-Type: application/json; charset=utf-8
 
-{"thread":{"text":"Today the weather is amazing","username":"mehmet","owner":"65ea5c4a9d1fe3d9e5f46083","\_id":"65ef8544e1bd9d3837852bb0","likes":[],"comments":[],"createdAt":"2024-03-11T22:27:16.855Z","updatedAt":"2024-03-11T22:27:16.855Z","\_\_v":0}}
+{"example":{"text":"Today the weather is amazing","username":"mehmet","owner":"65ea5c4a9d1fe3d9e5f46083","\_id":"65ef8544e1bd9d3837852bb0","likes":[],"comments":[],"createdAt":"2024-03-11T22:27:16.855Z","updatedAt":"2024-03-11T22:27:16.855Z","\_\_v":0}}
 ```
 
 ## [License](LICENSE)

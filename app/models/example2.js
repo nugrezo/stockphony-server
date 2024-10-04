@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
-const commentsSchema = new mongoose.Schema(
+const example2Schema = new mongoose.Schema(
   {
-    text: {
+    content1: {
       type: String,
       required: true,
     },
-    username: {
+    content2: {
       type: String,
       ref: "User",
     },
@@ -22,4 +22,4 @@ const commentsSchema = new mongoose.Schema(
   }
 );
 
-module.exports = commentsSchema;
+module.exports = example2Schema;

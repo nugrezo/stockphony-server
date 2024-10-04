@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "threadify",
+  "description": "stockphony",
   "main": "server.js",
   "directories": {
     "lib": "lib",

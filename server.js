@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 // require route files
-const threadifyRoutes = require("./app/routes/threadify_routes");
 const userRoutes = require("./app/routes/user_routes");
-const commentRoutes = require("./app/routes/comments_routes");
-const likesRoutes = require("./app/routes/likes_routes");
+const exampleRoutes = require("./app/routes/example_routes");
+// const example1Routes = require("./app/routes/example1_routes");
+// const example2Routes = require("./app/routes/example2_routes");
+
 // require middleware
 const errorHandler = require("./lib/error_handler");
 const replaceToken = require("./lib/replace_token");
@@ -41,7 +42,7 @@ mongoose
 const app = express();
 
 // set CORS headers on response from this API using the `cors` NPM package
-// `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
+// `CLIENT_ORIGIN` is an environment variable that will be set on render.com
 app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN || `http://localhost:${clientDevPort}`,
@@ -72,10 +73,10 @@ app.use(express.static("public"));
 app.use(requestLogger);
 
 // register route files
-app.use(threadifyRoutes);
 app.use(userRoutes);
-app.use(commentRoutes);
-app.use(likesRoutes);
+app.use(exampleRoutes);
+// app.use(example1Routes);
+// app.use(example2Routes);
 
 // register error handling middleware
 // note that this comes after the route middlewares, because it needs to be

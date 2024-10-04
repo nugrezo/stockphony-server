@@ -4,8 +4,7 @@ const express = require("express");
 const passport = require("passport");
 
 // pull in Mongoose model for examples
-const Thread = require("../models/thread");
-const User = require("../models/user");
+const Example = require("../models/example");
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -20,7 +19,6 @@ const requireOwnership = customErrors.requireOwnership;
 const requireOwnershipBool = customErrors.requireOwnershipBool;
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
-// { threadify: { title: '', text: 'foo' } } -> { threadify: { text: 'foo' } }
 const removeBlanks = require("../../lib/remove_blank_fields");
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
@@ -31,27 +29,27 @@ const requireToken = passport.authenticate("bearer", { session: false });
 const router = express.Router();
 
 // INDEX
-// GET /threads
-router.get("/threads", requireToken, async (req, res, next) => {
+// GET /examples
+router.get("/examples", requireToken, async (req, res, next) => {
   try {
-    const threads = await Thread.find();
+    const examples = await Example.find();
     // Map examples to plain JavaScript objects
-    const mappedThreads = threads.map((thread) => thread.toObject());
-    res.status(200).json({ threads: mappedThreads });
+    const mappedExamples = examples.map((example) => example.toObject());
+    res.status(200).json({ examples: mappedExamples });
   } catch (error) {
     next(error);
   }
 });
 
 // SHOW
-// GET /threads/5a7db6c74d55bc51bdf39793
-router.get("/threads/:id", requireToken, async (req, res, next) => {
+// GET /examples/5a7db6c74d55bc51bdf39793
+router.get("/examples/:id", requireToken, async (req, res, next) => {
   try {
     // req.params.id will be set based on the `:id` in the route
-    const thread = await Thread.findById(req.params.id);
+    const example = await Example.findById(req.params.id);
 
-    // If `findById` is successful, respond with 200 and "thread" JSON
-    res.status(200).json({ thread: thread.toObject() });
+    // If `findById` is successful, respond with 200 and "example" JSON
+    res.status(200).json({ example: example.toObject() });
   } catch (error) {
     // If an error occurs, pass it to the handler
     next(error);
@@ -59,18 +57,18 @@ router.get("/threads/:id", requireToken, async (req, res, next) => {
 });
 
 // CREATE
-// POST /threads
-router.post("/threads", requireToken, async (req, res, next) => {
+// POST /examples
+router.post("/examples", requireToken, async (req, res, next) => {
   try {
-    // Set owner of new thread to be the current user
-    req.body.thread.owner = req.user.id;
-    // Set username of new thread to be the current username
-    req.body.thread.username = req.user.username;
-    // Use await with Thread.create to handle it as a promise
-    const thread = await Thread.create(req.body.thread);
+    // Set owner of new example to be the current user
+    req.body.example.owner = req.user.id;
+    // Set username of new example to be the current username
+    req.body.example.username = req.user.username;
+    // Use await with Example.create to handle it as a promise
+    const example = await Example.create(req.body.example);
 
-    // Respond with the created thread
-    res.status(201).json({ thread: thread.toObject() });
+    // Respond with the created example
+    res.status(201).json({ example: example.toObject() });
   } catch (error) {
     // Pass any errors along to the error handler
     next(error);
@@ -78,26 +76,26 @@ router.post("/threads", requireToken, async (req, res, next) => {
 });
 
 // UPDATE
-// PATCH /threads/5a7db6c74d55bc51bdf39793
+// PATCH /examples/5a7db6c74d55bc51bdf39793
 router.patch(
-  "/threads/:id",
+  "/examples/:id",
   requireToken,
   removeBlanks,
   async (req, res, next) => {
     try {
       // If the client attempts to change the `owner` property by including a new owner, prevent that
-      delete req.body.thread.owner;
+      delete req.body.example.owner;
 
-      // Find the thread by ID
-      const thread = await Thread.findById(req.params.id);
-      // Handle 404 if the thread is not found
-      handle404(thread);
+      // Find the example by ID
+      const example = await Example.findById(req.params.id);
+      // Handle 404 if the example is not found
+      handle404(example);
 
-      // Ensure ownership of the thread
-      requireOwnership(req, thread);
+      // Ensure ownership of the example
+      requireOwnership(req, example);
 
-      // Update the thread using the provided data
-      await thread.updateOne(req.body.thread);
+      // Update the example using the provided data
+      await example.updateOne(req.body.example);
 
       // If the update succeeded, return 204 and no JSON
       res.sendStatus(204);
@@ -109,18 +107,18 @@ router.patch(
 );
 
 // DESTROY
-// DELETE /threads/:id
-router.delete("/threads/:id", requireToken, async (req, res, next) => {
+// DELETE /examples/:id
+router.delete("/examples/:id", requireToken, async (req, res, next) => {
   try {
-    const thread = await Thread.findById(req.params.id);
-    // Handle 404 if the thread is not found
-    handle404(thread);
+    const example = await Example.findById(req.params.id);
+    // Handle 404 if the example is not found
+    handle404(example);
 
-    // Ensure ownership of the thread
-    requireOwnership(req, thread);
+    // Ensure ownership of the example
+    requireOwnership(req, example);
 
-    // Use await to delete the thread
-    await thread.deleteOne();
+    // Use await to delete the example
+    await example.deleteOne();
 
     // Respond with status 204 for successful deletion
     res.sendStatus(204);
