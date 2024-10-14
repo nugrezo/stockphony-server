@@ -5,6 +5,7 @@ const cors = require("cors");
 
 // require route files
 const userRoutes = require("./app/routes/user_routes");
+const adminRoutes = require("./app/routes/admin_routes");
 const exampleRoutes = require("./app/routes/example_routes");
 // const example1Routes = require("./app/routes/example1_routes");
 // const example2Routes = require("./app/routes/example2_routes");
@@ -74,6 +75,7 @@ app.use(requestLogger);
 
 // register route files
 app.use(userRoutes);
+app.use(adminRoutes);
 app.use(exampleRoutes);
 // app.use(example1Routes);
 // app.use(example2Routes);
