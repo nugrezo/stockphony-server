@@ -70,7 +70,7 @@ router.post("/sign-in", async (req, res, next) => {
   try {
     const admin = await Admin.findOne({ email: req.body.credentials.email });
 
-      // maybe different error message for Admin?
+// TODO: maybe different error message for Admin?
     if (!admin) {
       throw new BadCredentialsError();
     }
