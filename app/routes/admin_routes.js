@@ -74,4 +74,15 @@ router.post("/admin-sign-in", async (req, res, next) => {
   }
 });
 
+// ADMIN SIGN-OUT
+router.delete("/admin-sign-out", requireAdminToken, (req, res, next) => {
+  // create a new random token for the admin, invalidating the current one
+  req.user.token = crypto.randomBytes(16);
+  // save the token and respond with 204
+  req.user
+    .save()
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
 module.exports = router;
