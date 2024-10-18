@@ -6,8 +6,6 @@ const cors = require("cors");
 // require route files
 const userRoutes = require("./app/routes/user_routes");
 const adminRoutes = require("./app/routes/admin_routes");
-// const example1Routes = require("./app/routes/example1_routes");
-// const example2Routes = require("./app/routes/example2_routes");
 
 // require middleware
 const errorHandler = require("./lib/error_handler");
@@ -15,7 +13,6 @@ const replaceToken = require("./lib/replace_token");
 const requestLogger = require("./lib/request_logger");
 
 // require database configuration logic
-// `db` will be the actual Mongo URI as a string
 const db = require("./config/db");
 
 // require configured passport authentication middleware
@@ -27,8 +24,6 @@ const serverDevPort = 4741;
 const clientDevPort = 7165;
 
 // establish database connection
-// use new version of URL parser
-// use createIndex instead of deprecated ensureIndex
 mongoose
   .connect(db, {})
   .then(() => {
@@ -41,49 +36,52 @@ mongoose
 // instantiate express application object
 const app = express();
 
-// set CORS headers on response from this API using the `cors` NPM package
-// `CLIENT_ORIGIN` is an environment variable that will be set on render.com
+// Set up CORS configuration with multiple origins
+const allowedOrigins = [
+  `http://localhost:${clientDevPort}`, // Add other origins here if needed
+  `http://localhost:3000`, // Example of another development origin
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || `http://localhost:${clientDevPort}`,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow cookies and credentials
   })
 );
 
 // define port for API to run on
 const port = process.env.PORT || serverDevPort;
 
-// this middleware makes it so the client can use the Rails convention
-// of `Authorization: Token token=<token>` OR the Express convention of
-// `Authorization: Bearer <token>`
+// Middleware for token authorization
 app.use(replaceToken);
 
-// register passport authentication middleware
+// Register passport authentication middleware
 app.use(auth);
 
-// add `express.json` middleware which will parse JSON requests into
-// JS objects before they reach the route files.
-// The method `.use` sets up middleware for the Express application
+// Add `express.json` middleware for parsing JSON requests
 app.use(express.json());
-// this parses requests sent by `$.ajax`, which use a different content type
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static("public"));
 
-// log each request as it comes in for debugging
+// Log each request as it comes in for debugging
 app.use(requestLogger);
 
-// register route files
+// Register route files
 app.use(userRoutes);
 app.use(adminRoutes);
-// app.use(example1Routes);
-// app.use(example2Routes);
 
-// register error handling middleware
-// note that this comes after the route middlewares, because it needs to be
-// passed any error messages from them
+// Register error handling middleware
 app.use(errorHandler);
 
-// run API on designated port (4741 in this case)
+// Run API on designated port
 app.listen(port, () => {
   console.log("listening on port " + port);
 });
