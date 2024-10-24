@@ -7,6 +7,7 @@ const cors = require("cors");
 const userRoutes = require("./app/routes/user_routes");
 const adminRoutes = require("./app/routes/admin_routes");
 const stockRoutes = require("./app/routes/stock_routes");
+const marketScheduleRoutes = require("./app/routes/marketSchedule_routes"); // Import market schedule routes
 
 // const example1Routes = require("./app/routes/example1_routes");
 // const example2Routes = require("./app/routes/example2_routes");
@@ -80,6 +81,7 @@ app.use(requestLogger);
 app.use(userRoutes);
 app.use(adminRoutes);
 app.use(stockRoutes);
+app.use(marketScheduleRoutes);
 // app.use(example1Routes);
 // app.use(example2Routes);
 
