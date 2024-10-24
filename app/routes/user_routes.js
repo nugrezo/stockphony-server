@@ -18,8 +18,6 @@ const BadCredentialsError = errors.BadCredentialsError;
 
 const User = require("../models/user");
 
-const multer = require("multer");
-
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `res.user`

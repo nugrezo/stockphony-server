@@ -6,6 +6,8 @@ const cors = require("cors");
 // require route files
 const userRoutes = require("./app/routes/user_routes");
 const adminRoutes = require("./app/routes/admin_routes");
+const stockRoutes = require("./app/routes/stock_routes");
+
 // const example1Routes = require("./app/routes/example1_routes");
 // const example2Routes = require("./app/routes/example2_routes");
 
@@ -20,6 +22,7 @@ const db = require("./config/db");
 
 // require configured passport authentication middleware
 const auth = require("./lib/auth");
+const adminAuth = require("./lib/adminAuth");
 
 // define server and client ports
 // used for cors and local port declaration
@@ -59,6 +62,7 @@ app.use(replaceToken);
 
 // register passport authentication middleware
 app.use(auth);
+app.use(adminAuth);
 
 // add `express.json` middleware which will parse JSON requests into
 // JS objects before they reach the route files.
@@ -75,6 +79,7 @@ app.use(requestLogger);
 // register route files
 app.use(userRoutes);
 app.use(adminRoutes);
+app.use(stockRoutes);
 // app.use(example1Routes);
 // app.use(example2Routes);
 
