@@ -17,6 +17,15 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    stockphonyAccountNumber: {
+      type: String,
+      unique: true,
+    },
+    bankInfo: {
+      bankName: { type: String },
+      bankAccountNumber: { type: String },
+      routingNumber: { type: String },
+    },
     hashedPassword: {
       type: String,
       required: true,

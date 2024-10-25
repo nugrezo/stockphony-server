@@ -44,10 +44,15 @@ router.post("/sign-up", async (req, res, next) => {
       bcryptSaltRounds
     );
 
+    const stockphonyAccountNumber = Math.floor(
+      100000000 + Math.random() * 900000000
+    ).toString();
+
     const user = {
       fullName: req.body.credentials.fullName,
       email: req.body.credentials.email,
       username: req.body.credentials.username,
+      stockphonyAccountNumber,
       hashedPassword: hash,
     };
 
@@ -123,6 +128,91 @@ router.patch("/change-password", requireToken, async (req, res, next) => {
     res.sendStatus(204);
   } catch (error) {
     // pass any errors along to the error handler
+    next(error);
+  }
+});
+
+// Get the bank information for the authenticated user
+router.get("/account-info", requireToken, async (req, res, next) => {
+  try {
+    const userId = req.user.id; // Assuming `req.user` has the authenticated user's ID
+
+    // Find the user by ID and exclude the hashed password
+    const user = await User.findById(userId).select("-hashedPassword");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Respond with user info, including bank details and other fields
+    res.status(200).json({
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        username: user.username,
+        stockphonyAccountNumber: user.stockphonyAccountNumber || "N/A",
+        bankInfo: {
+          bankName: user.bankInfo?.bankName || "",
+          bankAccountNumber: user.bankInfo?.bankAccountNumber || "",
+          routingNumber: user.bankInfo?.routingNumber || "",
+        },
+        profilePhoto: user.profilePhoto || null,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /bank-info - Fetch bank information for the authenticated user
+router.get("/bank-info", requireToken, async (req, res, next) => {
+  try {
+    const userId = req.user.id; // Authenticated user's ID
+    const user = await User.findById(userId).select("bankInfo"); // Fetch only the bankInfo field
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      bankInfo: user.bankInfo || {
+        bankName: "Not registered",
+        bankAccountNumber: "Not registered",
+        routingNumber: "Not registered",
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// PATCH /update-bank-info
+// Update bank information for the authenticated user
+router.patch("/update-bank-info", requireToken, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { bankInfo } = req.body; // Ensure bank info is sent as an object
+
+    if (!bankInfo) {
+      return res.status(400).json({ message: "Bank information is required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the bankInfo subdocument
+    user.bankInfo = {
+      bankName: bankInfo.bankName || user.bankInfo.bankName,
+      bankAccountNumber:
+        bankInfo.bankAccountNumber || user.bankInfo.bankAccountNumber,
+      routingNumber: bankInfo.routingNumber || user.bankInfo.routingNumber,
+    };
+
+    await user.save();
+    res.status(200).json({ user });
+  } catch (error) {
     next(error);
   }
 });
