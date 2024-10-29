@@ -13,7 +13,7 @@ const stockSchema = new mongoose.Schema(
     },
     stockVolume: {
       type: Number,
-      required: true, // Must be filled for admin-added stocks
+      required: true,
     },
     initialPrice: {
       type: Number,
@@ -21,34 +21,38 @@ const stockSchema = new mongoose.Schema(
     },
     dayHigh: {
       type: Number,
-      required: true, // Admin must fill this when adding stock
+      required: true,
     },
     dayLow: {
       type: Number,
-      required: true, // Admin must fill this when adding stock
+      required: true,
     },
     change: {
       type: Number,
-      required: true, // Calculated change from initialPrice and dayLow
+      required: true,
     },
     changePercent: {
       type: Number,
-      required: true, // Calculated percentage change from dayLow
+      required: true,
     },
     source: {
-      type: String, // 'api' for API stocks, 'admin' for admin-added stocks
+      type: String,
       required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
-      default: null, // API stocks don't have owners, admin-added ones do
+      default: null,
+    },
+    randomPriceGenerator: {
+      type: String,
+      enum: ["yes", "no"],
+      default: "no", // Default to 'no' if not specified
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: true,
     toObject: {
-      // Remove `owner` and `source` when sending data to the frontend
       transform: (_doc, stock) => {
         delete stock.owner;
         delete stock.source;

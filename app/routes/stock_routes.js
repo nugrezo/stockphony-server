@@ -44,6 +44,7 @@ router.post("/stocks", requireAdminToken, async (req, res, next) => {
       initialPrice,
       dayHigh,
       dayLow,
+      randomPriceGenerator, // Include randomPriceGenerator here
     } = req.body.stock;
 
     // Check if the stockTicker already exists
@@ -73,7 +74,9 @@ router.post("/stocks", requireAdminToken, async (req, res, next) => {
       changePercent,
       source: "admin",
       owner: req.user._id,
+      randomPriceGenerator, // Pass the randomPriceGenerator to Stock.create
     });
+    console.log("Newly created stock:", newStock);
 
     res.status(201).json({ stock: newStock.toObject() });
   } catch (error) {
