@@ -98,6 +98,19 @@ router.post("/sign-in", async (req, res, next) => {
   }
 });
 
+// SIGN OUT
+router.delete("/sign-out", requireToken, (req, res, next) => {
+  // create a new random token for the user, invalidating the current one
+  // console.log("req.user.token is ", req.user.token);
+  req.user.token = crypto.randomBytes(16);
+
+  // save the token and respond with 204 if successful
+  req.user
+    .save()
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
+
 // CHANGE password
 // PATCH /change-password
 router.patch("/change-password", requireToken, async (req, res, next) => {
@@ -215,17 +228,6 @@ router.patch("/update-bank-info", requireToken, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
-
-router.delete("/sign-out", requireToken, (req, res, next) => {
-  // create a new random token for the user, invalidating the current one
-  req.user.token = crypto.randomBytes(16).toString("hex"); // Convert Buffer to hex string
-
-  // save the token and respond with 204 if successful
-  req.user
-    .save()
-    .then(() => res.sendStatus(204))
-    .catch(next);
 });
 
 // GET /users/:id

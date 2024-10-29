@@ -77,6 +77,7 @@ router.post("/admin-sign-in", async (req, res, next) => {
 // ADMIN SIGN-OUT
 router.delete("/admin-sign-out", requireAdminToken, (req, res, next) => {
   console.log("Admin (req.user) during sign-out:", req.user); // Log the admin to check
+  // console.log("req.user.token is ", req.user.token);
 
   // create a new random token for the admin, invalidating the current one
   req.user.token = crypto.randomBytes(16);

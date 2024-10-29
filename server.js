@@ -11,6 +11,7 @@ const marketScheduleRoutes = require("./app/routes/marketSch_routes"); // Import
 const transferRoutes = require("./app/routes/transfer_routes");
 const investmentRoutes = require("./app/routes/investment_routes");
 const buyingPowerRoutes = require("./app/routes/buyingPower_routes");
+const transactionHistoryRoutes = require("./app/routes/transactionHistory_routes");
 
 // const example1Routes = require("./app/routes/example1_routes");
 // const example2Routes = require("./app/routes/example2_routes");
@@ -88,6 +89,7 @@ app.use(marketScheduleRoutes);
 app.use(transferRoutes);
 app.use(investmentRoutes);
 app.use(buyingPowerRoutes);
+app.use(transactionHistoryRoutes);
 
 // app.use(example1Routes);
 // app.use(example2Routes);
