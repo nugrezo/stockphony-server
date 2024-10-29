@@ -54,15 +54,20 @@ router.get("/investments", requireToken, async (req, res, next) => {
 });
 
 // Sell shares of an investment
-router.patch("/:id/sell", requireToken, async (req, res, next) => {
-  console.log("Received investment ID:", req.params.id); // Log the ID
-  console.log("Request body data:", req.body); // Log body data
-  const { sharesToSell, sellPrice } = req.body.investment;
-
+// Sell shares of an investment
+router.post("/sell", requireToken, async (req, res, next) => {
   try {
+    const { stockTicker, sharesToSell, sellPrice, date } = req.body.investment;
+
+    // Validate input
+    if (!stockTicker || sharesToSell <= 0 || !sellPrice) {
+      throw new errors.BadParamsError("Invalid sell parameters.");
+    }
+
+    // Find the user's investment based on stockTicker
     const investment = await Investment.findOne({
-      _id: req.params.id,
       userId: req.user.id,
+      stockTicker,
     });
 
     if (!investment || investment.shares < sharesToSell) {
@@ -73,15 +78,16 @@ router.patch("/:id/sell", requireToken, async (req, res, next) => {
       });
     }
 
+    // Update or remove the investment
     if (investment.shares === sharesToSell) {
-      // Remove investment if all shares are sold
-      await Investment.deleteOne({ _id: investment._id });
-      res.status(200).json({ message: "Investment sold completely" });
+      await Investment.deleteOne({ _id: investment._id }); // Delete if selling all shares
+      res.status(200).json({ message: "Investment sold completely." });
     } else {
-      // Update remaining shares
       investment.shares -= sharesToSell;
       await investment.save();
-      res.status(200).json({ message: "Shares sold successfully", investment });
+      res
+        .status(200)
+        .json({ message: "Shares sold successfully.", investment });
     }
   } catch (error) {
     next(error);
