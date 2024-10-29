@@ -53,12 +53,11 @@ router.get("/transactions", requireToken, async (req, res, next) => {
     const transactions = await TransactionHistory.find({
       user: req.user._id,
     }).sort({ createdAt: -1 }); // Sorting by creation date (newest first)
+    console.log("Fetched user transactions:", transactions); // Log transactions
 
-    res
-      .status(200)
-      .json({
-        transactions: transactions.map((transaction) => transaction.toObject()),
-      });
+    res.status(200).json({
+      transactions: transactions.map((transaction) => transaction.toObject()),
+    });
   } catch (error) {
     next(error);
   }

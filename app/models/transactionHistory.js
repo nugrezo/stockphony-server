@@ -51,7 +51,6 @@ const transactionHistorySchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
-      min: 0,
     },
     status: {
       type: String,
