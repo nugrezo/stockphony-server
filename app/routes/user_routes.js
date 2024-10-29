@@ -219,8 +219,9 @@ router.patch("/update-bank-info", requireToken, async (req, res, next) => {
 
 router.delete("/sign-out", requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
-  req.user.token = crypto.randomBytes(16);
-  // save the token and respond with 204
+  req.user.token = crypto.randomBytes(16).toString("hex"); // Convert Buffer to hex string
+
+  // save the token and respond with 204 if successful
   req.user
     .save()
     .then(() => res.sendStatus(204))
