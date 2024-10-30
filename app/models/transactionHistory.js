@@ -33,19 +33,25 @@ const transactionHistorySchema = new mongoose.Schema(
     stockTicker: {
       type: String,
       required: function () {
-        return ["buy", "sell"].includes(this.transactionType);
+        return (
+          this.transactionType === "buy" || this.transactionType === "sell"
+        );
       },
     },
     shares: {
       type: Number,
       required: function () {
-        return ["buy", "sell"].includes(this.transactionType);
+        return (
+          this.transactionType === "buy" || this.transactionType === "sell"
+        );
       },
     },
     pricePerShare: {
       type: Number,
       required: function () {
-        return ["buy", "sell"].includes(this.transactionType);
+        return (
+          this.transactionType === "buy" || this.transactionType === "sell"
+        );
       },
     },
     amount: {
